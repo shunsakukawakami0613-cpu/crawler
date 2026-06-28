@@ -34,7 +34,7 @@ public class DownloadFromUrl {
         MakeFolder makeFolder = new MakeFolder();
         while(manageUrl.indexOf("/") >= 0){
             folderName = makeFolderName(manageUrl);
-            srcpath = makeFolder.make(folderName, srcpath);
+            srcpath = makeFolder.make(folderName,srcpath);
             manageUrl = manageUrl.substring(folderName.length() + 1);
         }
 

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.nio.file.Path;
+
 public class Crawler {
     
     // 変数
