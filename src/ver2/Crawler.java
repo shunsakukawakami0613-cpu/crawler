@@ -16,8 +16,8 @@ public class Crawler {
     Document doc;
 
     // static変数
-    static String folderpath;
-    static String srcpath;
+    Path folderpath;
+    Path srcpath;
 
     // URLを保存する静的なハッシュマップ
     static HashMap<String, String> urls = new HashMap<>();
@@ -28,12 +28,12 @@ public class Crawler {
 
 
     // CrawlerMainからのみのコンストラクタ
-    Crawler(String URL, int depth, String folderpath){
+    Crawler(String URL, int depth, Path folderpath){
         try{
             this.doc = Jsoup.connect(URL).get();
             this.depth = depth;
-            Crawler.folderpath = folderpath;
-            Crawler.srcpath = folderpath + "src\\";
+            this.folderpath = folderpath;
+            this.srcpath = folderpath.resolve("download");
     
             // 保存するhtmlのファイル名
             String fileName = doc.title();
