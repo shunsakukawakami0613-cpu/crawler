@@ -17,8 +17,10 @@ public class CrawlerMain {
         Path folderPath = makeCrawlFolderPath();
         
         // クロール
-        Crawler crawler = new Crawler(folderPath, maxDepth);
-        crawler.crawl(targetUrl, currentDepth);
+        if(currentDepth <= maxDepth){
+            Crawler crawler = new Crawler(folderPath, maxDepth);
+            crawler.crawl(targetUrl, currentDepth);
+        }
     }
     
 
