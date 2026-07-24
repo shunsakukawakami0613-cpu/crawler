@@ -1,4 +1,4 @@
-package ver2;
+package ver3;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,8 +29,7 @@ public class CrawlerMain {
         Path currentPath = getCurrentPath();
 
         // targetUrlをフォルダ名に使用する
-        ReplaceCannotUseWord replaceCannotUseWord = new ReplaceCannotUseWord();
-        String replacedTargetUrl = replaceCannotUseWord.replace(targetUrl);
+        String replacedTargetUrl = targetUrl.replaceAll("[\\\\/:*?\"<>|]", "_");
         
         // 保存するフォルダのパスを作成
         return currentPath.resolve("download").resolve(replacedTargetUrl);
