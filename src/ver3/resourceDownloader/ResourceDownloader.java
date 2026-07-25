@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 public class ResourceDownloader {
 
     // 同時ダウンロードするスレッド数（例: 5~10程度）
-    private static final int THREAD_COUNT = 5;
+    private static final int THREAD_COUNT = 7;
 
     public void download(Map<String, Path> resourceMap, Path path) {
         

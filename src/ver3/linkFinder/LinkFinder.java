@@ -10,7 +10,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.TimeUnit;
 
+import org.jsoup.nodes.Document;
+
 import ver3.linkFinder.finder.*;
+import ver3.util.DocMaker;
 import ver3.util.ReplaceCannotUseWord;
 
 public class LinkFinder {
@@ -30,7 +33,7 @@ public class LinkFinder {
     // フェーサー
     Phaser phaser = new Phaser(0);
 
-    private static final int THREAD_COUNT = 5;
+    private static final int THREAD_COUNT = 7;
     
     public LinkFinder(int maxDepth, Path htmlFolderPath, Map<String, Path> linkMap, Map<String, Path> resourceMap){
         this.maxDepth = maxDepth;
@@ -41,17 +44,27 @@ public class LinkFinder {
     
     public void find(String targetUrl){
 
-        linkQueue.add(new Link(targetUrl, 1));
-
-        phaser.register();
+        // linkQueue.add(new Link(targetUrl, 1));
+        findProcess(new Link(targetUrl, 1));
 
         ExecutorService executor = Executors.newFixedThreadPool(THREAD_COUNT);
 
-        while(!linkQueue.isEmpty() && phaser.getRegisteredParties() > 0){
+        while(true){
             // キューから取得
             Link link = linkQueue.poll();
             
             if(link == null){
+
+                if(phaser.getRegisteredParties() == 0){
+                    break;
+                }
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+
                 continue;
             }
 
@@ -67,7 +80,6 @@ public class LinkFinder {
             
         }
 
-        phaser.arriveAndDeregister();
         executor.shutdown();
         try {
             if (!executor.awaitTermination(1, TimeUnit.HOURS)) {
@@ -117,13 +129,17 @@ public class LinkFinder {
         ResourceFinder jsFinder = new JsFinder();
 
         ResourceFinder[] resourceFinders = {imgFinder, cssFinder, jsFinder};
+
+        DocMaker docMaker = new DocMaker();
+        Document doc = docMaker.make(url);
+
         for(ResourceFinder resourceFinder : resourceFinders){
-            resourceFinder.find(url, resourceMap);
+            resourceFinder.find(doc, resourceMap);
         }
     }
 
     private List<String> findNextLinks(Link link){
-        if(link.depth > maxDepth){
+        if(link.depth >= maxDepth){
             return null;
         }
         NextLinkFinder nextLinkFinder = new NextLinkFinder();

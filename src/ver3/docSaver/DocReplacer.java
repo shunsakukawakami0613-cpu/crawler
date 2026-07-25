@@ -4,44 +4,25 @@ import java.nio.file.Path;
 import java.util.Map;
 
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+
+import ver3.docSaver.replacer.*;
 
 public class DocReplacer {
+    
     public void replaceResource(Document doc, Map<String, Path> resourceMap){
+        ResourceReplacer imgReplacer = new ImgReplacer();
+        ResourceReplacer cssReplacer = new CssReplacer();
+        ResourceReplacer jsReplacer = new JsReplacer();
 
-        Elements links = doc.select("img[src]");
-        for(Element element : links){
-            String url = element.attr("abs:src");
-            if(resourceMap.containsKey(url)){
-                element.attr("src", resourceMap.get(url).toString());
-            }
-        }
+        ResourceReplacer[] resourceReplacers = {imgReplacer, cssReplacer, jsReplacer};
 
-        links = doc.select("link[href~=.css]");
-        for(Element element : links){
-            String url = element.attr("abs:href");
-            if(resourceMap.containsKey(url)){
-                element.attr("href", resourceMap.get(url).toString());
-            }
-        }
-
-        links = doc.select("script[src]");
-        for(Element element : links){
-            String url = element.attr("abs:src");
-            if(resourceMap.containsKey(url)){
-                element.attr("src", resourceMap.get(url).toString());
-            }
+        for(ResourceReplacer resourceReplacer : resourceReplacers){
+            resourceReplacer.replaceResource(doc, resourceMap);
         }
     }
 
     public void replaceLink(Document doc, Map<String, Path> linkMap){
-        Elements links = doc.select("a[href]");
-        for(Element element : links){
-            String url = element.attr("abs:href");
-            if(linkMap.containsKey(url) && linkMap.get(url) != null){
-                element.attr("href", linkMap.get(url).toString());
-            }
-        }
+        LinkReplacer linkReplacer = new LinkReplacer();
+        linkReplacer.replaceLink(doc, linkMap);
     }
 }
