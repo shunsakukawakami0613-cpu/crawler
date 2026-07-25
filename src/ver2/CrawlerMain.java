@@ -26,7 +26,8 @@ public class CrawlerMain {
     private static Path makeCrawlFolderPath(){
         
         // カレントリのパス
-        Path currentPath = getCurrentPath();
+        // Path currentPath = getCurrentPath();
+        Path currentPath = Paths.get("");
 
         // targetUrlをフォルダ名に使用する
         ReplaceCannotUseWord replaceCannotUseWord = new ReplaceCannotUseWord();
@@ -36,10 +37,4 @@ public class CrawlerMain {
         return currentPath.resolve("download").resolve(replacedTargetUrl);
     }
 
-
-    private static Path getCurrentPath(){
-        // カレントリのパスを取得
-        return Paths.get("").toAbsolutePath();
-    }
-    
 }

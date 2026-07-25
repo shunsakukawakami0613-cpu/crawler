@@ -2,7 +2,7 @@ package ver3;
 
 import org.jsoup.nodes.Document;
 
-import ver2.finder.*;
+import ver3.finder.*;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -13,10 +13,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Crawler {
 
-    // resourceを保存するパス
+    // resourceを保存するフォルダのパス
     Path resourceFolderPath;
 
-    // linkを保存するパス
+    // htmlを保存するフォルダのパス
     Path htmlFolderPath;
 
     // 最大深度
@@ -53,49 +53,52 @@ public class Crawler {
     // クロールメソッド
     public void crawl(String url, int currentDepth) {
         
-        // link, resourceを探す
-        find(url, currentDepth);
+        // linkを探す
+        findLinks(url, currentDepth);
 
         // resourceをダウンロード
         downloadResources(linkMap, resourceFolderPath);
 
-        // linkを保存
+        // htmlを保存
         saveDocuments(linkMap, htmlFolderPath);
 
     }
 
-    
 
-    private void find(String url, int currentDepth){
+
+    private void findLinks(String url, int currentDepth){
 
         putLinkMap(url, htmlFolderPath, linkMap);
         
         // img, css, js を探す
         findResources(url, resourceMap);
 
-        // linkを探してくる
-        List<String> nextLinks = findLinks(url);
+        // linkを探して、キューに追加
+        putLinkToQueue(findLinks(url));
 
         // 見つけたlinkをクロール
         int nextDepth = currentDepth + 1;
         // 深度が残っているか判定
         if(nextDepth <= maxDepth){
-            for(String link : nextLinks){
-                // linkListに追加されている場合は戻る
-                if(linkMap.containsKey(link)){
-                    continue;
-                }
+            return;
+        }
 
-                // 待機
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-
-                // 次のクロール
-                crawl(link, nextDepth);
+        for(String link : nextLinks){
+            
+            // linkListに追加されている場合は戻る
+            if(linkMap.containsKey(link)){
+                continue;
             }
+
+            // 待機
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
+            // 次のクロール
+            find(link, nextDepth);
         }
     }
 
@@ -122,6 +125,25 @@ public class Crawler {
     private List<String> findLinks(String url){
         LinkFinder linkFinder = new LinkFinder();
         return linkFinder.find(url);
+    }
+
+    private void putLinkToQueue(List<String> nextLinks){
+        // linkをキューに追加
+        for(String link : nextLinks){
+            if(link == null){
+                continue;
+            }
+
+            if(linkQueue.contains(link)){
+                continue;
+            }
+            
+            if(linkMap.containsKey(link)){
+                continue;
+            }
+
+            linkQueue.add(link);
+        }
     }
 
     private void downloadResources(HashMap<String, Path> linkMap, Path resourceFolderPath){
