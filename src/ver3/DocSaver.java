@@ -4,19 +4,29 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.jsoup.nodes.Document;
 
 public class DocSaver {
-    public void save(ArrayList<Document> docList, HashMap<String, Path> linkMap, Path folderPath) {
-        for(Document doc : docList){
-            DocReplacer docReplacer = new DocReplacer();
-            docReplacer.replaceResource(doc, linkMap);
-            docReplacer.replaceLink(doc, linkMap);
-            saveDoc(doc, linkMap.get(doc.location()));
+    public void save(HashMap<String, Path> linkMap, HashMap<String, Path> resourceMap, Path folderPath) {
+        Set<String> links = linkMap.keySet();
+        for(String link : links){
+
+            DocMaker docMaker = new DocMaker();
+            Document doc = docMaker.make(link);
+
+            ReplaceDoc(doc, linkMap, resourceMap);
+
+            saveDoc(doc, linkMap.get(link));
         }
+    }
+    
+    private void ReplaceDoc(Document doc, HashMap<String, Path> linkMap, HashMap<String, Path> resourceMap){
+        DocReplacer docReplacer = new DocReplacer();
+        docReplacer.replaceResource(doc, resourceMap);
+        docReplacer.replaceLink(doc, linkMap);
     }
 
     private void saveDoc(Document doc, Path filePath){

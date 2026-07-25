@@ -7,7 +7,6 @@ import java.nio.file.Files;
 
 public class FolderMaker {
 
-    // ダウンロードしたファイルを保存するためのフォルダを作り，そのフォルダのパスを返す
     public void make(Path path) {
         // フォルダ作成
         try{

@@ -7,16 +7,22 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class LinkFinder {
+import ver3.DocMaker;
 
-    public List<String> find(Document doc) {
+public class NextLinkFinder {
+
+    public List<String> find(String url) {
+        
+        DocMaker docMaker = new DocMaker();
+        Document doc = docMaker.make(url);
+        
         List<String> urls = new ArrayList<>();
         Elements links = doc.select("a[href]");
         for (Element element : links) {
             String absUrl = element.attr("abs:href");
             if (!absUrl.isEmpty()) {
                 urls.add(absUrl);
-                // System.out.println(absUrl);
+                System.out.println("find: " + absUrl);
             }
         }
         return urls;
