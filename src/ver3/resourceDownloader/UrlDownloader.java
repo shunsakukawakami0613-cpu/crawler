@@ -1,4 +1,4 @@
-package ver3;
+package ver3.resourceDownloader;
 
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -11,6 +11,8 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import java.nio.file.Path;
+
+import ver3.util.FolderMaker;
 
 public class UrlDownloader {
 

@@ -1,7 +1,12 @@
 package ver3;
 
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import ver3.docSaver.DocSaver;
+import ver3.linkFinder.LinkFinder;
+import ver3.resourceDownloader.ResourceDownloader;
 
 public class Crawler {
 
@@ -18,10 +23,10 @@ public class Crawler {
     Path htmlFolderPath;
 
     // linkを保存するマップ
-    HashMap<String, Path> linkMap = new HashMap<String, Path>();
+    Map<String, Path> linkMap = new ConcurrentHashMap<String, Path>();
 
     // resourceを保存するマップ
-    HashMap<String, Path> resourceMap = new HashMap<String, Path>();
+    Map<String, Path> resourceMap = new ConcurrentHashMap<String, Path>();
 
 
     // コンストラクタ

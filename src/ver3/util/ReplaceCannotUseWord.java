@@ -1,4 +1,4 @@
-package ver3;
+package ver3.util;
 
 public class ReplaceCannotUseWord{
     public String replace(String string) {

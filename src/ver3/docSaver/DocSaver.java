@@ -1,16 +1,18 @@
-package ver3;
+package ver3.docSaver;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.jsoup.nodes.Document;
 
+import ver3.util.DocMaker;
+
 public class DocSaver {
-    public void save(HashMap<String, Path> linkMap, HashMap<String, Path> resourceMap, Path folderPath) {
+    public void save(Map<String, Path> linkMap, Map<String, Path> resourceMap, Path folderPath) {
         Set<String> links = linkMap.keySet();
         for(String link : links){
 
@@ -23,7 +25,7 @@ public class DocSaver {
         }
     }
     
-    private void ReplaceDoc(Document doc, HashMap<String, Path> linkMap, HashMap<String, Path> resourceMap){
+    private void ReplaceDoc(Document doc, Map<String, Path> linkMap, Map<String, Path> resourceMap){
         DocReplacer docReplacer = new DocReplacer();
         docReplacer.replaceResource(doc, resourceMap);
         docReplacer.replaceLink(doc, linkMap);

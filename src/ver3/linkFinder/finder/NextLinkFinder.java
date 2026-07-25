@@ -1,4 +1,4 @@
-package ver3.finder;
+package ver3.linkFinder.finder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import ver3.DocMaker;
+import ver3.util.DocMaker;
 
 public class NextLinkFinder {
 

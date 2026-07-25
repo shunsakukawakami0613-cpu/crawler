@@ -1,14 +1,14 @@
-package ver3;
+package ver3.docSaver;
 
 import java.nio.file.Path;
-import java.util.HashMap;
+import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class DocReplacer {
-    public void replaceResource(Document doc, HashMap<String, Path> resourceMap){
+    public void replaceResource(Document doc, Map<String, Path> resourceMap){
 
         Elements links = doc.select("img[src]");
         for(Element element : links){
@@ -35,7 +35,7 @@ public class DocReplacer {
         }
     }
 
-    public void replaceLink(Document doc, HashMap<String, Path> linkMap){
+    public void replaceLink(Document doc, Map<String, Path> linkMap){
         Elements links = doc.select("a[href]");
         for(Element element : links){
             String url = element.attr("abs:href");
