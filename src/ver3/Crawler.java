@@ -4,9 +4,9 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import ver3.docSaver.DocSaver;
-import ver3.linkFinder.LinkFinder;
-import ver3.resourceDownloader.ResourceDownloader;
+import ver3.downloadResources.ResourceDownloader;
+import ver3.findLinks.LinkFinder;
+import ver3.saveDocuments.DocSaver;
 
 public class Crawler {
 
@@ -16,25 +16,25 @@ public class Crawler {
     // 最大深度
     int maxDepth;
     
-    // resourceを保存するフォルダのパス
-    Path resourceFolderPath;
-
     // htmlを保存するフォルダのパス
     Path htmlFolderPath;
 
-    // linkを保存するマップ
-    Map<String, Path> linkMap = new ConcurrentHashMap<String, Path>();
+    // resourceを保存するフォルダのパス
+    Path resourceFolderPath;
 
-    // resourceを保存するマップ
-    Map<String, Path> resourceMap = new ConcurrentHashMap<String, Path>();
+    // linkを保存するスレッドセーフなMap
+    Map<String, Path> htmlMap = new ConcurrentHashMap<>();
+
+    // resourceを保存するスレッドセーフなMap
+    Map<String, Path> resourceMap = new ConcurrentHashMap<>();
 
 
     // コンストラクタ
     public Crawler(String targetUrl, int maxDepth) {
-
+        
         // ターゲットURLの設定
         this.targetUrl = targetUrl;
-        
+
         // 最大深度の設定
         this.maxDepth = maxDepth;
 
@@ -44,7 +44,7 @@ public class Crawler {
 
     // クロールメソッド
     public void crawl() {
-        
+
         // linkを探す
         findLinks();
 
@@ -53,7 +53,6 @@ public class Crawler {
 
         // htmlを保存
         saveDocuments();
-
     }
 
 
@@ -65,18 +64,18 @@ public class Crawler {
     }
 
     private void findLinks(){
-        LinkFinder linkFinder = new LinkFinder(maxDepth, htmlFolderPath, linkMap, resourceMap);
+        LinkFinder linkFinder = new LinkFinder(maxDepth, htmlFolderPath, resourceFolderPath, htmlMap, resourceMap);
         linkFinder.find(targetUrl);
     }
 
     private void downloadResources(){
         ResourceDownloader resourceDownloader = new ResourceDownloader();
-        resourceDownloader.download(resourceMap, resourceFolderPath);
+        resourceDownloader.download(resourceMap, resourceFolderPath, htmlFolderPath);
     }
 
     private void saveDocuments(){
         DocSaver docSaver = new DocSaver();
-        docSaver.save(linkMap, resourceMap, htmlFolderPath);
+        docSaver.save(htmlMap, resourceMap, htmlFolderPath);
     }
 
 }

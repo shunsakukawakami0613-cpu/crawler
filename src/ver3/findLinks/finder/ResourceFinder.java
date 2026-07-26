@@ -1,8 +1,8 @@
-package ver3.linkFinder.finder;
+package ver3.findLinks.finder;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -13,13 +13,17 @@ public interface ResourceFinder {
     String getQuery();
     String getAttr();
 
-    default void find(Document doc, Map<String, Path> resourceMap){
+    default Set<String> find(Document doc, Path htmlFolderPath, Path resourceFolderPath){
+
+        Set<String> resourceUrls = new HashSet<>();
 
         Elements links = doc.select(getQuery());
         for(Element element : links){
             String attrValue = element.attr(getAttr());
-            resourceMap.put(attrValue, Paths.get(""));
+            resourceUrls.add(attrValue);
             System.out.println("find: " + attrValue);
         }
+
+        return resourceUrls;
     }
 }

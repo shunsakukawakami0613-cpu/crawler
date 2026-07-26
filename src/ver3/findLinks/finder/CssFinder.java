@@ -1,4 +1,4 @@
-package ver3.linkFinder.finder;
+package ver3.findLinks.finder;
 
 public class CssFinder implements ResourceFinder{
 

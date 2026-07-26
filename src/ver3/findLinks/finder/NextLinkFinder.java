@@ -1,22 +1,17 @@
-package ver3.linkFinder.finder;
+package ver3.findLinks.finder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import ver3.util.DocMaker;
-
 public class NextLinkFinder {
 
-    public List<String> find(String url) {
-        
-        DocMaker docMaker = new DocMaker();
-        Document doc = docMaker.make(url);
-        
-        List<String> urls = new ArrayList<>();
+    public Set<String> find(Document doc) {
+
+        Set<String> urls = new HashSet<>();
         Elements links = doc.select("a[href]");
         for (Element element : links) {
             String absUrl = element.attr("abs:href");

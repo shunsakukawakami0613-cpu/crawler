@@ -1,6 +1,6 @@
-package ver3.linkFinder.finder;
+package ver3.saveDocuments.replacer;
 
-public class JsFinder implements ResourceFinder {
+public class JsReplacer implements ResourceReplacer{
     
     @Override
     public String getQuery() {
@@ -9,6 +9,11 @@ public class JsFinder implements ResourceFinder {
     
     @Override
     public String getAttr() {
+        return "src";
+    }
+
+    @Override
+    public String getAbsAttr() {
         return "abs:src";
     }
 }

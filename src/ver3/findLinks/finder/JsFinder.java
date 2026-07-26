@@ -1,6 +1,6 @@
-package ver3.docSaver.replacer;
+package ver3.findLinks.finder;
 
-public class JsReplacer implements ResourceReplacer{
+public class JsFinder implements ResourceFinder {
     
     @Override
     public String getQuery() {
@@ -9,11 +9,6 @@ public class JsReplacer implements ResourceReplacer{
     
     @Override
     public String getAttr() {
-        return "src";
-    }
-
-    @Override
-    public String getAbsAttr() {
         return "abs:src";
     }
 }

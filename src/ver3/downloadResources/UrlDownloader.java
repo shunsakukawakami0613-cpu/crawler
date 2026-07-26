@@ -1,8 +1,6 @@
-package ver3.resourceDownloader;
+package ver3.downloadResources;
 
-import java.io.BufferedWriter;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,8 +14,6 @@ import ver3.util.FolderMaker;
 
 public class UrlDownloader {
 
-    String url;
-    Path path;
     String removedUrl;
 
     String fileName;
@@ -25,15 +21,15 @@ public class UrlDownloader {
     
     int index;
 
-    // コンストラクタ
-    UrlDownloader(String url, Path path){
-        this.url = url;
-        this.path = path;
-    }
-
     // URLからダウンロードする
-    public Path download() {
+    public Path download(String url, Path path){
         
+        if(url == null || url.isEmpty()){
+            return null;
+        }
+
+        removedUrl = url;
+
         // http:// を除去
         if(url.startsWith("https://")){
             removedUrl = url.replace("https://", "");
@@ -65,13 +61,13 @@ public class UrlDownloader {
         if(index >= 0){
             fileName = fileName.substring(0, index);
         }
-
+        
         // コネクションを開く
         URLConnection con;
         try {
             con = new URL(url).openConnection();
-            con.setConnectTimeout(60000);
-            con.setReadTimeout(60000);
+            con.setConnectTimeout(5000);
+            con.setReadTimeout(5000);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
@@ -81,7 +77,7 @@ public class UrlDownloader {
         }
         
         // 拡張子を取得
-        String fileExtension = getFileExtension(con.getContentType());
+        String fileExtension = getFileExtension(con);
         
         // ファイル名を作成
         Path filepath =  downloadPath.resolve(fileName + fileExtension);
@@ -97,13 +93,17 @@ public class UrlDownloader {
         }
         
         // ダウンロードしたURLを表示 確認用
-        System.out.println(url);
+        System.out.println("download: " + url);
         
         return filepath;
+        
 
     }
 
-    private String getFileExtension(String contentsType){
+
+    private String getFileExtension(URLConnection con){
+
+        String contentsType = con.getContentType();
         
         String fileExtension = "";
 
@@ -128,16 +128,7 @@ public class UrlDownloader {
         }else if(contentsType.contains("application/ecmascript")){
             fileExtension = ".js";
         }else{
-            try{
-                BufferedWriter bw = new BufferedWriter(new FileWriter(path + "ErrorFileExtension.txt", true));
-                bw.write("不明な拡張子：" + contentsType + "\n");
-                bw.close();
-
-                System.out.println("不明な拡張子：" + contentsType);
-
-            }catch(Exception e){
-                System.out.println(e);
-            }
+            fileExtension = "";
         }
         
         return fileExtension;

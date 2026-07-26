@@ -1,4 +1,4 @@
-package ver3.docSaver.replacer;
+package ver3.saveDocuments.replacer;
 
 import java.nio.file.Path;
 import java.util.Map;
