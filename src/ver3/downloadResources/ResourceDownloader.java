@@ -3,7 +3,7 @@ package ver3.downloadResources;
 import java.nio.file.Path;
 import java.util.Map;
 
-import ver3.util.SetParallelExecutor;
+import ver3.util.ParallelSetExecutor;
 
 public class ResourceDownloader {
 
@@ -12,7 +12,7 @@ public class ResourceDownloader {
     
     public void download(Map<String, Path> resourceMap, Path resourceFolderPath, Path htmlFolderPath) {
         
-        SetParallelExecutor.execute(resourceMap.keySet(), url -> {
+        ParallelSetExecutor.execute(resourceMap.keySet(), url -> {
             downloadProcess(url, resourceMap, resourceFolderPath, htmlFolderPath);
         }, THREAD_COUNT);
 

@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-public class SetParallelExecutor {
+public class ParallelSetExecutor {
 
     public static <T> void execute(Collection<T> items, Consumer<T> action, int threadCount) {
         

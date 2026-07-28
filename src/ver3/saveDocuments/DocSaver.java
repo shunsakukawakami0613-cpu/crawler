@@ -6,7 +6,7 @@ import java.util.Map;
 import org.jsoup.nodes.Document;
 
 import ver3.util.DocMaker;
-import ver3.util.SetParallelExecutor;
+import ver3.util.ParallelSetExecutor;
 
 public class DocSaver {
 
@@ -15,7 +15,7 @@ public class DocSaver {
     
     public void save(Map<String, Path> linkMap, Map<String, Path> resourceMap, Path htmlFolderPath) {
         
-        SetParallelExecutor.execute(linkMap.keySet(), link -> {
+        ParallelSetExecutor.execute(linkMap.keySet(), link -> {
             saveProcess(link, htmlFolderPath, resourceMap, linkMap);
         }, THREAD_COUNT);
 

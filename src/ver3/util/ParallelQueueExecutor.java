@@ -3,16 +3,16 @@ package ver3.util;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Phaser;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-public class QueueParallelExecutor {
+public class ParallelQueueExecutor {
 
     public static <T> void execute(Queue<T> items, Consumer<T> action, int threadCount){
         
         // フェーサー
-        Phaser phaser = new Phaser(0);
+        AtomicInteger activeTasks = new AtomicInteger(0);
 
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
     
@@ -21,24 +21,25 @@ public class QueueParallelExecutor {
             T item = items.poll();
 
             if(item == null){
-                if(phaser.getRegisteredParties() == 0){
+                if(activeTasks.get() == 0){
                     break;
                 }
                 try {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    break;
                 }
                 continue;
             }
     
-            phaser.register();
+            activeTasks.incrementAndGet();
             
             executor.submit(() -> {
                 try{
                     action.accept(item);
                 }finally{
-                    phaser.arriveAndDeregister();
+                    activeTasks.decrementAndGet();
                 }
             });
         }
@@ -53,5 +54,4 @@ public class QueueParallelExecutor {
             Thread.currentThread().interrupt();
         }
     }
-
 }

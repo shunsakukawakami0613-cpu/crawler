@@ -12,7 +12,7 @@ import org.jsoup.nodes.Document;
 
 import ver3.findLinks.finder.*;
 import ver3.util.DocMaker;
-import ver3.util.QueueParallelExecutor;
+import ver3.util.ParallelQueueExecutor;
 
 public class LinkFinder {
 
@@ -43,7 +43,7 @@ public class LinkFinder {
 
         linkQueue.add(new Link(targetUrl, 1));
 
-        QueueParallelExecutor.execute(linkQueue, link -> {
+        ParallelQueueExecutor.execute(linkQueue, link -> {
             findProcess(link);
         }, THREAD_COUNT);
 
